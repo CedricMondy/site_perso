@@ -1,0 +1,215 @@
+---
+title: Organigrammes circulaires
+author: Cédric Mondy
+date: '2020-03-03'
+slug: organigrammes-circulaires
+categories: []
+tags:
+  - dataviz
+  - R
+  - ggplot
+  - plotly
+subtitle: ''
+summary: ''
+authors: [admin]
+lastmod: '2020-03-03T16:41:23+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+```{r setup, include=FALSE}
+# permet d'afficher correctement les htmlwidgets dans le site
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(widgetframe)
+```
+
+
+## La découverte
+
+Il y a quelques semaines de celà, en parcourant le slack de la [data visualization society](https://www.datavisualizationsociety.com/) (si vous vous intéressez à la visualisation de données, je vous recommande fortement de rejoindre la DVS, c'est une communauté incroyablement dynamique et intéressante qui vient juste de [fêter son premier anniversaire](https://medium.com/nightingale/data-visualization-society-one-year-anniversary-6b43ed2cd86)), je suis tombé sur ce message de [Peter Cook](https://www.peterrcook.com/):
+
+> Hi everyone, here's an open source visualisation I've recently built showing the organograms (or org charts) of a few UK government departments. D3's tree layout was used to compute the tree shapes, voronoi for hover over, and D3's zoom for zoom and pan. Other than that it's custom code. The gallery view is static jpg images and if you click through the interactive charts are rendered to canvas. It's here: https://app.peterrcook.com/ukgov-organograms/ and open sourced at https://github.com/peterrcook/organograms  Hope you enjoy it! More than happy to discuss how it was built etc.
+
+Voici les organigrammes en question (cliquer dessus pour accéder à la version interactive):
+
+<iframe 
+    src="https://app.peterrcook.com/ukgov-organograms/"
+    width="100%"
+    height="500px"
+    style="border:none;">
+</iframe>
+
+Juste après avoir manipulé un peu l'application de Peter, j'ai tout de suite voulu savoir si/comment je pouvais essayer de m'approcher de ce résultat avec <img style="display:inline;height:16px;padding:0;margin:0;" src="https://www.r-project.org/logo/Rlogo.svg"/>.
+
+## Premières tentatives
+
+J'ai donc fait quelques recherches et je suis rapidement tombé sur **ggraph**, une extension de **ggplot2** qui permet de faire exactement ce type de graphiques!
+
+J'ai simplifié le code provenant du site [r-graph-gallery](https://www.r-graph-gallery.com/339-circular-dendrogram-with-ggraph.html) pour créer un tel graphe. 
+
+
+```{r}
+# J'ai pris l'habitude d'utiliser pacman pour charger les packages utilisés dans
+# mes scripts, outre le fait que p_load installe les packages manquants si
+# besoin, cette fonction permet aussi de charger plusieurs packages dans la même
+# commande.
+
+# Libraries
+if (!require(pacman)) install.packages("pacman")
+
+pacman::p_load(
+  # manipulation de données
+  tidygraph, dplyr, purrr,
+  # création de graphes de type dendrogrammes
+  ggplot2, ggraph,
+  # combinaison de plusieurs ggplot
+  cowplot,
+  # graphiques interactifs
+  plotly
+)
+```
+
+Le script d'origine est plus complexe car la lisibilité des labels est rendue délicate par la représentation circulaire, une grande partie de ce script avait donc pour finalité d'ajuster les angles des labels. Comme ce qui m'interesse est d'obtenir une version interactive ou les labels apparraissent au survol des points, cela n'est pas aussi critique ici. 
+
+De plus, j'ai depuis découvert le package **tidygraph** qui permet de manipuler des données hiérarchiques dans la logique **tidyverse**, ce qui permet au passage d'éviter d'avoir à manipuler deux data frames  (edges et vertices) et d'avoir à utiliser **igraph** comme dans la solution d'origine.
+
+```{r, fig.height=6, fig.width=12}
+# Le fait de mettre entre parenthèses une assignation comme ici, permet
+# d'afficher le résultat sans avoir à appeler l'objet (ici data_graph)
+
+# on crée le tableau de données (correspond au tableau edges dans le script
+# d'origine)
+(
+  data_graph <- tibble(
+    from = "origin",
+    to = paste("group", seq(1, 10), sep = "")
+  ) %>%
+    bind_rows(
+      .,
+      tibble(
+        from = rep(.$to, each = 10),
+        to = paste("subgroup", seq(1, 100), sep = "_")
+      )
+    ) %>%
+    # on convertit en tbl_graph utilisable avec ggraph
+    as_tbl_graph()
+)
+
+# l'argument circular = TRUE est le plus important pour ce qui nous intéresse
+# ici. On peut également changer le layout (utiliser tree par exemple)
+circular_dendro <- ggraph(data_graph, layout = "dendrogram", circular = TRUE) +
+  geom_edge_diagonal(colour = "grey") +
+  # l'esthétique text n'est pas reconnu par ggplot mais est utilisée par plotly
+  geom_node_point(aes(text = name),
+    colour = "grey"
+  ) +
+  theme_void() +
+  theme(
+    legend.position = "none",
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+  )
+
+circular_dendro_labels <- circular_dendro +
+  geom_node_text(aes(label = name)) +
+  expand_limits(x = c(-1.1, 1.1), y = c(-1.1, 1.1))
+
+plot_grid(circular_dendro, circular_dendro_labels, nrow = 1)
+```
+
+Comme c'est une solution basée sur **ggplot**, je me suis dit *cool, je n'ai plus qu'à utiliser `ggplotly` (**plotly**) et j'aurai une version interactive!*, sauf que...
+
+```{r}
+interactive_circular_dendro <- ggplotly(circular_dendro)
+```
+
+Il restait encore du chemin à parcourir pour obtenir le résultat désiré, mais j'avais au moins des versions statiques de ce que je voulais.
+
+## La solution
+
+Puisque `ggplotly` ne fonctionnait pas, j'ai donc dû trouver une solution détournée de faire ce que je voulais.
+
+Je vous présente donc, pour ceux qui ne la connaisse pas encore, une fonction bien pratique de **ggplot2**: `ggplot_build`.
+Cette fonction, prend un objet ggplot et retourne toutes les informations nécessaires au rendu de cet objet, c'est à dire toutes les données actuellement représentées (une par layer, qui peuvent être différentes des données d'origine) et des informations sur les axes...
+
+Voyons quelles sont les données retournées pour notre dendrogramme circulaire:
+
+```{r}
+ggplot_build(circular_dendro)$data %>%
+  # transforme en tibble pour garder un affichage compact
+  map(as_tibble)
+```
+
+Nous avons donc un (grand) tableau correspondant aux *edges* (chemins reliant les points) et un autre correspondant aux *nodes* avec les coordonnées, les groupes... Tout ce qu'il nous faut pour recréer notre graphe directement avec **plotly**:
+
+```{r}
+data_edges <- ggplot_build(circular_dendro)$data[[1]]
+data_nodes <- ggplot_build(circular_dendro)$data[[2]]
+
+# On définit tout d'abord les propriétés des axes, c'est-à-dire aucun axe
+# visible
+ax <- list(
+  title = "",
+  zeroline = FALSE,
+  showline = FALSE,
+  showticklabels = FALSE,
+  showgrid = FALSE
+)
+```
+
+```{r, eval=FALSE}
+# on trace en premier les lignes des edges
+plot_ly(
+  data = data_edges,
+  x = ~x, y = ~y, name = ~group,
+  type = "scatter", mode = "line", hoverinfo = "none"
+) %>%
+  # puis on ajoute les points des nodes
+  add_markers(
+    data = data_nodes,
+    x = ~x, y = ~y,
+    # et on spécifie que les labels s'affiche au survol (hover)
+    text = ~text, hoverinfo = "text"
+  ) %>%
+  layout(
+    xaxis = ax, yaxis = ax,
+    colorway = "grey",
+    showlegend = FALSE,
+    hoverlabel = list(align = "left")
+  )
+```
+
+```{r, echo=FALSE}
+# on trace en premier les lignes des edges
+plot_ly(
+  data = data_edges,
+  x = ~x, y = ~y, name = ~group,
+  type = "scatter", mode = "line", hoverinfo = "none"
+) %>%
+  # puis on ajoute les points des nodes
+  add_markers(
+    data = data_nodes,
+    x = ~x, y = ~y,
+    # et on spécifie que les labels s'affiche au survol (hover)
+    text = ~text, hoverinfo = "text"
+  ) %>%
+  layout(
+    xaxis = ax, yaxis = ax,
+    showlegend = FALSE,
+    hoverlabel = list(align = "left"),
+    # pour reproduire l'esthétique des diagrammes de Peter Cook
+    colorway = "white",
+    plot_bgcolor = "black",
+    paper_bgcolor = "black"
+  ) %>%
+  frameWidget(height = 600, width = 600)
+```
+
+## Pour finir
+
+Comme ce type de représentation pouvait intéresser d'autres personnes, j'ai regroupé tout cela dans une fonction et j'y ai ajouté quelques petites fonctionnalités en plus comme l'export des versions statiques et interactives et l'ajout possible d'un logo pour des organigrammes d'entreprise.
+
+<script src="https://gist.github.com/CedricMondy/6fb6ef978b9e0af44bfb2476ac742580.js"></script>

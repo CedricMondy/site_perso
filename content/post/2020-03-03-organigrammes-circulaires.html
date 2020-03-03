@@ -1,0 +1,216 @@
+---
+title: Organigrammes circulaires
+author: Cédric Mondy
+date: '2020-03-03'
+slug: organigrammes-circulaires
+categories: []
+tags:
+  - dataviz
+  - R
+  - ggplot
+  - plotly
+subtitle: ''
+summary: ''
+authors: [admin]
+lastmod: '2020-03-03T16:41:23+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/pymjs/pym.v1.js"></script>
+<script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
+
+
+<div id="la-découverte" class="section level2">
+<h2>La découverte</h2>
+<p>Il y a quelques semaines de celà, en parcourant le slack de la <a href="https://www.datavisualizationsociety.com/">data visualization society</a> (si vous vous intéressez à la visualisation de données, je vous recommande fortement de rejoindre la DVS, c’est une communauté incroyablement dynamique et intéressante qui vient juste de <a href="https://medium.com/nightingale/data-visualization-society-one-year-anniversary-6b43ed2cd86">fêter son premier anniversaire</a>), je suis tombé sur ce message de <a href="https://www.peterrcook.com/">Peter Cook</a>:</p>
+<blockquote>
+<p>Hi everyone, here’s an open source visualisation I’ve recently built showing the organograms (or org charts) of a few UK government departments. D3’s tree layout was used to compute the tree shapes, voronoi for hover over, and D3’s zoom for zoom and pan. Other than that it’s custom code. The gallery view is static jpg images and if you click through the interactive charts are rendered to canvas. It’s here: <a href="https://app.peterrcook.com/ukgov-organograms/" class="uri">https://app.peterrcook.com/ukgov-organograms/</a> and open sourced at <a href="https://github.com/peterrcook/organograms" class="uri">https://github.com/peterrcook/organograms</a> Hope you enjoy it! More than happy to discuss how it was built etc.</p>
+</blockquote>
+<p>Voici les organigrammes en question (cliquer dessus pour accéder à la version interactive):</p>
+<iframe src="https://app.peterrcook.com/ukgov-organograms/" width="100%" height="500px" style="border:none;">
+</iframe>
+<p>Juste après avoir manipulé un peu l’application de Peter, j’ai tout de suite voulu savoir si/comment je pouvais essayer de m’approcher de ce résultat avec <img style="display:inline;height:16px;padding:0;margin:0;" src="https://www.r-project.org/logo/Rlogo.svg"/>.</p>
+</div>
+<div id="premières-tentatives" class="section level2">
+<h2>Premières tentatives</h2>
+<p>J’ai donc fait quelques recherches et je suis rapidement tombé sur <strong>ggraph</strong>, une extension de <strong>ggplot2</strong> qui permet de faire exactement ce type de graphiques!</p>
+<p>J’ai simplifié le code provenant du site <a href="https://www.r-graph-gallery.com/339-circular-dendrogram-with-ggraph.html">r-graph-gallery</a> pour créer un tel graphe.</p>
+<pre class="r"><code># J&#39;ai pris l&#39;habitude d&#39;utiliser pacman pour charger les packages utilisés dans
+# mes scripts, outre le fait que p_load installe les packages manquants si
+# besoin, cette fonction permet aussi de charger plusieurs packages dans la même
+# commande.
+
+# Libraries
+if (!require(pacman)) install.packages(&quot;pacman&quot;)
+
+pacman::p_load(
+  # manipulation de données
+  tidygraph, dplyr, purrr,
+  # création de graphes de type dendrogrammes
+  ggplot2, ggraph,
+  # combinaison de plusieurs ggplot
+  cowplot,
+  # graphiques interactifs
+  plotly
+)</code></pre>
+<p>Le script d’origine est plus complexe car la lisibilité des labels est rendue délicate par la représentation circulaire, une grande partie de ce script avait donc pour finalité d’ajuster les angles des labels. Comme ce qui m’interesse est d’obtenir une version interactive ou les labels apparraissent au survol des points, cela n’est pas aussi critique ici.</p>
+<p>De plus, j’ai depuis découvert le package <strong>tidygraph</strong> qui permet de manipuler des données hiérarchiques dans la logique <strong>tidyverse</strong>, ce qui permet au passage d’éviter d’avoir à manipuler deux data frames (edges et vertices) et d’avoir à utiliser <strong>igraph</strong> comme dans la solution d’origine.</p>
+<pre class="r"><code># Le fait de mettre entre parenthèses une assignation comme ici, permet
+# d&#39;afficher le résultat sans avoir à appeler l&#39;objet (ici data_graph)
+
+# on crée le tableau de données (correspond au tableau edges dans le script
+# d&#39;origine)
+(
+  data_graph &lt;- tibble(
+    from = &quot;origin&quot;,
+    to = paste(&quot;group&quot;, seq(1, 10), sep = &quot;&quot;)
+  ) %&gt;%
+    bind_rows(
+      .,
+      tibble(
+        from = rep(.$to, each = 10),
+        to = paste(&quot;subgroup&quot;, seq(1, 100), sep = &quot;_&quot;)
+      )
+    ) %&gt;%
+    # on convertit en tbl_graph utilisable avec ggraph
+    as_tbl_graph()
+)</code></pre>
+<pre><code>## # A tbl_graph: 111 nodes and 110 edges
+## #
+## # A rooted tree
+## #
+## # Node Data: 111 x 1 (active)
+##   name  
+##   &lt;chr&gt; 
+## 1 origin
+## 2 group1
+## 3 group2
+## 4 group3
+## 5 group4
+## 6 group5
+## # ... with 105 more rows
+## #
+## # Edge Data: 110 x 2
+##    from    to
+##   &lt;int&gt; &lt;int&gt;
+## 1     1     2
+## 2     1     3
+## 3     1     4
+## # ... with 107 more rows</code></pre>
+<pre class="r"><code># l&#39;argument circular = TRUE est le plus important pour ce qui nous intéresse
+# ici. On peut également changer le layout (utiliser tree par exemple)
+circular_dendro &lt;- ggraph(data_graph, layout = &quot;dendrogram&quot;, circular = TRUE) +
+  geom_edge_diagonal(colour = &quot;grey&quot;) +
+  # l&#39;esthétique text n&#39;est pas reconnu par ggplot mais est utilisée par plotly
+  geom_node_point(aes(text = name),
+    colour = &quot;grey&quot;
+  ) +
+  theme_void() +
+  theme(
+    legend.position = &quot;none&quot;,
+    plot.margin = unit(c(0, 0, 0, 0), &quot;cm&quot;),
+  )</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: text</code></pre>
+<pre class="r"><code>circular_dendro_labels &lt;- circular_dendro +
+  geom_node_text(aes(label = name)) +
+  expand_limits(x = c(-1.1, 1.1), y = c(-1.1, 1.1))
+
+plot_grid(circular_dendro, circular_dendro_labels, nrow = 1)</code></pre>
+<p><img src="/post/2020-03-03-organigrammes-circulaires_files/figure-html/unnamed-chunk-2-1.png" width="1152" /></p>
+<p>Comme c’est une solution basée sur <strong>ggplot</strong>, je me suis dit <em>cool, je n’ai plus qu’à utiliser <code>ggplotly</code> (<strong>plotly</strong>) et j’aurai une version interactive!</em>, sauf que…</p>
+<pre class="r"><code>interactive_circular_dendro &lt;- ggplotly(circular_dendro)</code></pre>
+<pre><code>## Warning in geom2trace.default(dots[[1L]][[1L]], dots[[2L]][[1L]], dots[[3L]][[1L]]): geom_GeomEdgePath() has yet to be implemented in plotly.
+##   If you&#39;d like to see this geom implemented,
+##   Please open an issue with your example code at
+##   https://github.com/ropensci/plotly/issues</code></pre>
+<p>Il restait encore du chemin à parcourir pour obtenir le résultat désiré, mais j’avais au moins des versions statiques de ce que je voulais.</p>
+</div>
+<div id="la-solution" class="section level2">
+<h2>La solution</h2>
+<p>Puisque <code>ggplotly</code> ne fonctionnait pas, j’ai donc dû trouver une solution détournée de faire ce que je voulais.</p>
+<p>Je vous présente donc, pour ceux qui ne la connaisse pas encore, une fonction bien pratique de <strong>ggplot2</strong>: <code>ggplot_build</code>.
+Cette fonction, prend un objet ggplot et retourne toutes les informations nécessaires au rendu de cet objet, c’est à dire toutes les données actuellement représentées (une par layer, qui peuvent être différentes des données d’origine) et des informations sur les axes…</p>
+<p>Voyons quelles sont les données retournées pour notre dendrogramme circulaire:</p>
+<pre class="r"><code>ggplot_build(circular_dendro)$data %&gt;%
+  # transforme en tibble pour garder un affichage compact
+  map(as_tibble)</code></pre>
+<pre><code>## [[1]]
+## # A tibble: 11,000 x 23
+##    PANEL       x        y group  index  xend   yend circular edge_colour
+##    &lt;fct&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;    &lt;chr&gt;      
+##  1 1     0.       0.          1 0      0.332 -0.374 TRUE     grey       
+##  2 1     1.01e-4 -1.14e-4     1 0.0101 0.332 -0.374 TRUE     grey       
+##  3 1     4.01e-4 -4.52e-4     1 0.0202 0.332 -0.374 TRUE     grey       
+##  4 1     8.96e-4 -1.01e-3     1 0.0303 0.332 -0.374 TRUE     grey       
+##  5 1     1.58e-3 -1.78e-3     1 0.0404 0.332 -0.374 TRUE     grey       
+##  6 1     2.45e-3 -2.77e-3     1 0.0505 0.332 -0.374 TRUE     grey       
+##  7 1     3.51e-3 -3.95e-3     1 0.0606 0.332 -0.374 TRUE     grey       
+##  8 1     4.74e-3 -5.35e-3     1 0.0707 0.332 -0.374 TRUE     grey       
+##  9 1     6.15e-3 -6.93e-3     1 0.0808 0.332 -0.374 TRUE     grey       
+## 10 1     7.73e-3 -8.71e-3     1 0.0909 0.332 -0.374 TRUE     grey       
+## # ... with 10,990 more rows, and 14 more variables: edge_width &lt;dbl&gt;,
+## #   edge_linetype &lt;chr&gt;, edge_alpha &lt;lgl&gt;, start_cap &lt;lgl&gt;, end_cap &lt;lgl&gt;,
+## #   label &lt;lgl&gt;, label_pos &lt;dbl&gt;, label_size &lt;dbl&gt;, angle &lt;dbl&gt;, hjust &lt;dbl&gt;,
+## #   vjust &lt;dbl&gt;, family &lt;chr&gt;, fontface &lt;dbl&gt;, lineheight &lt;dbl&gt;
+## 
+## [[2]]
+## # A tibble: 111 x 11
+##          x      y text   PANEL group shape colour  size fill  alpha stroke
+##      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;fct&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;  &lt;dbl&gt;
+##  1  0       0     origin 1        11    19 grey     1.5 NA    NA       0.5
+##  2  0.332  -0.374 group1 1         1    19 grey     1.5 NA    NA       0.5
+##  3  0.0486 -0.498 group2 1         3    19 grey     1.5 NA    NA       0.5
+##  4 -0.253  -0.431 group3 1         4    19 grey     1.5 NA    NA       0.5
+##  5 -0.458  -0.200 group4 1         5    19 grey     1.5 NA    NA       0.5
+##  6 -0.488   0.108 group5 1         6    19 grey     1.5 NA    NA       0.5
+##  7 -0.332   0.374 group6 1         7    19 grey     1.5 NA    NA       0.5
+##  8 -0.0486  0.498 group7 1         8    19 grey     1.5 NA    NA       0.5
+##  9  0.253   0.431 group8 1         9    19 grey     1.5 NA    NA       0.5
+## 10  0.458   0.200 group9 1        10    19 grey     1.5 NA    NA       0.5
+## # ... with 101 more rows</code></pre>
+<p>Nous avons donc un (grand) tableau correspondant aux <em>edges</em> (chemins reliant les points) et un autre correspondant aux <em>nodes</em> avec les coordonnées, les groupes… Tout ce qu’il nous faut pour recréer notre graphe directement avec <strong>plotly</strong>:</p>
+<pre class="r"><code>data_edges &lt;- ggplot_build(circular_dendro)$data[[1]]
+data_nodes &lt;- ggplot_build(circular_dendro)$data[[2]]
+
+# On définit tout d&#39;abord les propriétés des axes, c&#39;est-à-dire aucun axe
+# visible
+ax &lt;- list(
+  title = &quot;&quot;,
+  zeroline = FALSE,
+  showline = FALSE,
+  showticklabels = FALSE,
+  showgrid = FALSE
+)</code></pre>
+<pre class="r"><code># on trace en premier les lignes des edges
+plot_ly(
+  data = data_edges,
+  x = ~x, y = ~y, name = ~group,
+  type = &quot;scatter&quot;, mode = &quot;line&quot;, hoverinfo = &quot;none&quot;
+) %&gt;%
+  # puis on ajoute les points des nodes
+  add_markers(
+    data = data_nodes,
+    x = ~x, y = ~y,
+    # et on spécifie que les labels s&#39;affiche au survol (hover)
+    text = ~text, hoverinfo = &quot;text&quot;
+  ) %&gt;%
+  layout(
+    xaxis = ax, yaxis = ax,
+    colorway = &quot;grey&quot;,
+    showlegend = FALSE,
+    hoverlabel = list(align = &quot;left&quot;)
+  )</code></pre>
+<div id="htmlwidget-1" style="width:600px;height:600px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/2020-03-03-organigrammes-circulaires_files/figure-html//widgets/widget_unnamed-chunk-7.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="pour-finir" class="section level2">
+<h2>Pour finir</h2>
+<p>Comme ce type de représentation pouvait intéresser d’autres personnes, j’ai regroupé tout cela dans une fonction et j’y ai ajouté quelques petites fonctionnalités en plus comme l’export des versions statiques et interactives et l’ajout possible d’un logo pour des organigrammes d’entreprise.</p>
+<script src="https://gist.github.com/CedricMondy/6fb6ef978b9e0af44bfb2476ac742580.js"></script>
+</div>
