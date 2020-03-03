@@ -1,0 +1,47 @@
+---
+title: Using conditional tree forests and life history traits to assess specific risks of stream degradation under multiple pressure scenario
+author: Cédric Mondy
+date: '2013-09-01'
+slug: 2013-odi
+categories: []
+tags:
+  - biomonitoring
+  - community
+  - ecology
+  - macroinvertebrates
+  - traits
+  - water framework directive
+  - random forest
+  - diagnostic
+  - modeling
+authors: [admin, Philippe Usseglio-Polatera]
+doi: 'https://doi.org/10.1016/j.ecolind.2011.12.013'
+publishDate: '2013-09-01'
+publication_types:
+  - '2'
+publication: 'Science of the total environment 461, 750-760'
+publication_short: ''
+abstract: 'The full accomplishment of the European Water Framework Directive objectives has required from EU members three successive steps: (i) the evaluation of their water body ecological status, (ii) the risk assessment of different anthropogenic pressure categories and (iii) the implementation of appropriate management and restoration programs.
+
+We aimed at designing an innovative retrospective ecological risk assessment (ERA) tool working for most of the French wadeable rivers in a context of multiple anthropogenic pressures (step ii). This tool, including conditional tree forest (CTF) models, was built on combinations of benthic macroinvertebrate trait-based metrics for each of sixteen anthropogenic pressure categories.
+
+For eleven pressure categories, CTF models have given good impairment risk assessment (i.e. AUC ≥ 0.70), even at moderate risk level and in a multi-pressure context. The four other models have provided poorer but promising results (AUC = 0.67 ± 0.02).
+
+Identifying the potential weight of individual anthropogenic pressures that lead to biotic assemblage impairment in streams under multiple pressure scenario, is a key step for managers to implement appropriate stream restoration programs. Simultaneously considering the whole complexity of bio-ecological adaptations within biotic assemblages subjected to human pressures provides a functional diagnostic tool both (i) ecologically relevant and (ii) efficient for ERA.'
+summary: ''
+featured: no
+url_pdf: ~
+url_code: ~
+url_dataset: ~
+url_poster: ~
+url_project: ~
+url_slides: ~
+url_source: ~
+url_video: ~
+image:
+  caption: 'Graphical output of the diagnostic tool'
+  focal_point: ''
+  preview_only: no
+projects: []
+slides: ''
+---

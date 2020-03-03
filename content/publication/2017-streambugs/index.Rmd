@@ -1,0 +1,38 @@
+---
+title: Integrating ecological theories and traits in process‐based modeling of macroinvertebrate community dynamics in streams
+author: Cédric Mondy
+date: '2017-06-01'
+slug: 2017-streambugs
+categories: []
+tags:
+  - community
+  - ecology
+  - modeling
+  - macroinvertebrates
+  - bayesian
+  - process
+authors: [admin, Nele Schuwirth]
+doi: 'https://doi.org/10.1002/eap.1530'
+publishDate: '2017-06-01'
+publication_types:
+  - '2'
+publication: 'Ecological Applications 27 (4), 1365-1377'
+publication_short: ''
+abstract: 'Predicting the composition and dynamics of communities is a challenging but useful task to efficiently support ecosystem management. Community ecology has developed a number of promising theories, including food webs, metabolic theory, ecological stoichiometry, and environmental filtering. Their joint implementation in a mechanistic modeling framework should help us to bring community ecology to a new level by improving its predictive abilities. One of the challenges lies in the proper consideration of model uncertainty. In this paper, we contribute to this challenging task by modeling the temporal dynamics of macroinvertebrate communities in a stream subjected to hydropeaking in Switzerland. To this end, we extended the mechanistic model Streambugs regarding flood‐induced drift processes and the use of trait information to define performance filters. Model predictions without any calibration were in the right order of magnitude but did not reflect the dynamics of most of the invertebrate taxa well. Bayesian inference drastically improved the model fit. It revealed that a large share of total model output uncertainty can be attributed to observation errors, which exceeded model parameter uncertainty. Observed and simulated community‐aggregated traits helped to identify and understand model deficits. The combination of different ecological theories and trait information in a single mechanistic modeling framework combined with Bayesian inference can thus help to predict responses of communities to environmental changes, which can support ecosystem management.'
+summary: ''
+featured: no
+url_pdf: ~https://www.dora.lib4ri.ch/eawag/islandora/object/eawag%3A14165/datastream/PDF/Mondy-2017-Integrating_ecological_theories_and_traits-%28published_version%29.pdf
+url_code: ~
+url_dataset: ~
+url_poster: ~
+url_project: ~
+url_slides: ~
+url_source: ~
+url_video: ~
+image:
+  caption: 'Temporal evolution of observed (white dots) and simulated algae and invertebrate densities'
+  focal_point: ''
+  preview_only: no
+projects: []
+slides: ''
+---

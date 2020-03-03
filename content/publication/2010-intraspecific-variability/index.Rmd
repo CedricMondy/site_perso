@@ -1,0 +1,44 @@
+---
+title: Intraspecific variability and trait-based community assembly
+author: Cédric Mondy
+date: '2010-08-04'
+slug: 2010-intraspecific-variability
+categories: []
+tags: 
+  - ecology
+  - traits
+  - community
+  - null model
+authors: [Vincent Jung, Cyrille Violle, admin, Lucien Hoffmann, Serge Muller]
+doi: 'https://doi.org/10.1111/j.1365-2745.2010.01687.x'
+publishDate: '2010-08-04'
+publication_types:
+  - '2'
+publication: 'Journal of ecology 98 (5), 1134-1140'
+publication_short: ''
+abstract: '
+1. Trait-based approaches applied to community ecology have led to a considerable advance in understanding the effect of environmental filters on species assembly. Although plant traits are known to vary both between and within species, little is known about the role of intraspecific trait variability in the non-random assembly mechanisms controlling the coexistence of species, including habitat filtering and niche differentiation.
+
+2. We investigate the role of intraspecific variability in three key functional traits – specific leaf area (SLA), leaf dry matter content (LDMC) and height – in structuring grassland communities distributed along a flooding gradient. We quantified the contribution of intraspecific variability relative to interspecific differences in the trait–gradient relationship, and we used a null model approach to detect patterns of habitat filtering and niche differentiation, with and without intraspecific variability.
+
+3. Community mean SLA and height varied significantly along the flooding gradient and intraspecific variability accounted for 44% and 32%, respectively, of these trait–gradient relationships. LDMC did not vary along the gradient, with and without accounting for intraspecific variability. Our null model approach revealed significant patterns of habitat filtering and niche differentiation for SLA and height, but not for LDMC. More strikingly, considering intraspecific trait variability greatly increased the detection of habitat filtering and was necessary to detect niche differentiation processes.
+
+4. Synthesis. Our study provides evidence for a strong role of intraspecific trait variability in community assembly. Our findings suggest that intraspecific trait variability promotes species coexistence, by enabling species to pass through both abiotic and biotic filters. We argue that community ecology would benefit from more attention to intraspecific variability.
+'
+summary: ''
+featured: no
+url_pdf: ~https://besjournals.onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2745.2010.01687.x
+url_code: ~
+url_dataset: ~
+url_poster: ~
+url_project: ~
+url_slides: ~
+url_source: ~
+url_video: ~
+image:
+  caption: 'A conceptual framework describing the role of intraspecific trait variability in regulating community assembly'
+  focal_point: ''
+  preview_only: no
+projects: []
+slides: ''
+---

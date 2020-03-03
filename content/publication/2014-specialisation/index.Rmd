@@ -1,0 +1,47 @@
+---
+title: Using fuzzy‐coded traits to elucidate the non‐random role of anthropogenic
+  stress in the functional homogenisation of invertebrate assemblages
+author: Cédric Mondy
+date: '2014-03-01'
+slug: 2014-specialisation
+categories: []
+tags:
+  - community
+  - ecology
+  - macroinvertebrates
+  - traits
+  - biomonitoring
+authors: [admin, Philippe Usseglio-Polatera]
+doi: 'https://doi.org/10.1111/fwb.12289'
+publishDate: '2014-03-01'
+publication_types:
+  - '2'
+publication: 'Freshwater Biology 59 (3), 584-600'
+publication_short: ''
+abstract: '
+    Functional homogenisation of ecological communities (i.e. communities composed mainly of generalist species) is a major concern and has been often considered as a non‐random effect of anthropogenic stress, with generalist taxa being preferentially selected under increasing stress.
+
+    However, the degree of specialisation of a given taxon for a particular resource (a convenient proxy for studying functional homogenisation) is often described simply as ‘uses the resource’ or ‘does not’, despite there being an obvious continuum of degrees of specialisation by species for many different resources. Moreover, the non‐randomness of the relationship between resource specialisation by the species making up a community and anthropogenic stress has been rarely tested.
+
+    In this study, a framework based on fuzzy‐coded traits is proposed to calculate a new continuous index of potential specialisation for a variety of taxa in a wide range of ecosystems. The use of this index is illustrated using 10 Eltonian and 11 Grinnellian traits of stream macroinvertebrate assemblages. We tested (i) the significance of the relationships between the average degree of specialisation among the taxa of a community and two types of anthropogenic stress (acidification and organic contamination) at the local scale and (ii) the non‐randomness of these relationships.
+
+    Stress gradients explained, through non‐random effects, a rather high proportion of the variability observed in the degree of taxon specialisation, with significant relationships for eight of the 21 traits studied with regard to acidification and for 18 of the 21 traits with regard to organic contamination. Although most of these relationships described functional homogenisation (i.e. decreasing specialisation with increasing stress), increasing specialisation with increasing stress was demonstrated for a few Eltonian traits.
+
+    We confirmed the importance of indicators of functional homogenisation calculated at the community level when studying the loss of biodiversity due to anthropogenic stress. The assessment of ecological specialisation seems to be a very promising strategy for understanding the effects of habitat impairment on community and ecosystem processes. Moreover, we show that the intensity of functional homogenisation depends on a trade‐off between ‘direct’ and ‘indirect’ effects of stressors, and we consider that more attention should be paid to the mechanisms by which anthropogenic stressors act on taxa.'
+summary: ''
+featured: no
+url_pdf: ~
+url_code: ~
+url_dataset: ~
+url_poster: ~
+url_project: ~
+url_slides: ~
+url_source: ~
+url_video: ~
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+slides: ''
+---
