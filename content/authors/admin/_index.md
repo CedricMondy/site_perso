@@ -1,7 +1,7 @@
 ---
 authors:
 - admin
-bio: Freshwater ecologist interested in the use of bio-ecological traits in community ecology. Worked on the use of stream macroinvertebrate traits to develop biomonitoring tools for French stream managers. Interested in the development and the use of statistical and process-based models to investigate community assembly with a special focus on the effects of multiple anthropogenic pressures.
+bio: Ecologue, avec un intérêt particulier pour les écosystèmes d'eau douce et la réponse de leurs communautés aux pressions (pollutions, altérations physiques...) d'origines humaines. J'ai en particulier travaillé sur l'utilisation des caractéristiques écologiques de macroinvertébrés pour évaluer la qualité écologique des cours d'eau de France métropolitaine dans le contexte de la Directive européenne Cadre sur l'Eau. Je travaille désormais au sein de l'Office Français de la Biodiversité (OFB) où je continue à réaliser des analyses de données afin d'améliorer la connaissance de la biodiversité et sa prise en compte dans les politiques publiques. Je suis également l'animateur du compte Twitter de l'Association Française de Limnologie (https://www.limnologie.fr/; https://twitter.com/limnologie).
 education:
   courses:
   - course: Doctorat (PhD) en Ecologie
@@ -37,4 +37,8 @@ user_groups:
 - Visitors
 ---
 
-Freshwater ecologist interested in the use of bio-ecological traits in community ecology. Worked on the use of stream macroinvertebrate traits to develop biomonitoring tools for French stream managers. Interested in the development and the use of statistical and process-based models to investigate community assembly with a special focus on the effects of multiple anthropogenic pressures.
+Ecologue, avec un intérêt particulier pour les écosystèmes d'eau douce et la réponse de leurs communautés aux pressions (pollutions, altérations physiques...) d'origines humaines. J'ai en particulier travaillé sur l'utilisation des caractéristiques écologiques de macroinvertébrés pour évaluer la qualité écologique des cours d'eau de France métropolitaine dans le contexte de la Directive européenne Cadre sur l'Eau. 
+
+Je travaille désormais au sein de l'Office Français de la Biodiversité (OFB) où je continue à réaliser des analyses de données afin d'améliorer la connaissance de la biodiversité et sa prise en compte dans les politiques publiques. 
+
+Je suis également l'animateur du compte Twitter de l'Association Française de Limnologie (https://www.limnologie.fr/; https://twitter.com/limnologie).

@@ -6,7 +6,17 @@
 [[main]]
   name = "Posts"
   url = "#posts"
+  weight = 10
+
+[[main]]
+  name = "Observations"
+  url = "#inaturalist"
   weight = 20
+
+[[main]]
+  name = "Photos"
+  url = "#flickr"
+  weight = 30
 
 [[main]]
   name = "Publications"
@@ -14,19 +24,9 @@
   weight = 40
 
 [[main]]
-  name = "Photos"
-  url = "#flickr"
-  weight = 50
-
-[[main]]
-  name = "Observations"
-  url = "#inaturalist"
-  weight = 55
-
-[[main]]
   name = "A propos de moi"
   url = "#about"
-  weight = 57
+  weight = 50
 
 [[main]]
   name = "Contact"
