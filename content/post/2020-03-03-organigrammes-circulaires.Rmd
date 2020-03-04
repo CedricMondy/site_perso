@@ -212,4 +212,10 @@ plot_ly(
 
 Comme ce type de représentation pouvait intéresser d'autres personnes, j'ai regroupé tout cela dans une fonction et j'y ai ajouté quelques petites fonctionnalités en plus comme l'export des versions statiques et interactives et l'ajout possible d'un logo pour des organigrammes d'entreprise.
 
+<style>
+  .dark table > tbody > tr:nth-child(2n+1) > td, .dark table > tbody > tr:nth-child(2n+1) > th {
+    background-color: #fff;
+}
+</style>
+
 <script src="https://gist.github.com/CedricMondy/6fb6ef978b9e0af44bfb2476ac742580.js"></script>
