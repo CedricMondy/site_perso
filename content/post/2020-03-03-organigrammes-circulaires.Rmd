@@ -205,7 +205,7 @@ plot_ly(
     plot_bgcolor = "black",
     paper_bgcolor = "black"
   ) %>%
-  frameWidget(height = 600, width = 600)
+  frameWidget()
 ```
 
 ## Pour finir
